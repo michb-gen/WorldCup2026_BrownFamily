@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>⚽ Brown Family • World Cup 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a472a;
+  --green-light: #2d6a4f;
+  --gold: #f0a500;
+  --gold-light: #ffc947;
+  --dark: #0d1f13;
+  --card: #1e3a23;
+  --text: #e8f5e9;
+  --text-muted: #8fad8f;
+  --border: #2d6a4f;
+  --blue: #1a3a5c;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 500px;
+  margin: 0 auto;
+}
+h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, var(--green) 0%, #0f2d1a 100%);
+  padding: 14px 20px 12px;
+  text-align: center;
+  border-bottom: 3px solid var(--gold);
+  position: sticky; top: 0; z-index: 100;
+}
+.header h1 { font-size: 26px; color: var(--gold); line-height: 1; }
+.header .sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; letter-spacing: 1px; }
+.player-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--dark);
+  font-weight: 800;
+  font-size: 11px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-top: 6px;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  background: var(--green);
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex: 0 0 auto;
+  padding: 11px 14px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* SCREENS */
+.screen { display: none; padding: 16px 14px 100px; }
+.screen.active { display: block; }
+
+/* PLAYER SELECT */
+.welcome-hero { text-align: center; padding: 24px 0 16px; }
+.welcome-hero .trophy { font-size: 56px; display: block; }
+.welcome-hero h2 { font-size: 30px; color: var(--gold); margin-top: 8px; }
+.welcome-hero p { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.player-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+.player-btn {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+  position: relative;
+}
+.player-btn:active { transform: scale(0.96); }
+.player-btn.selected { border-color: var(--gold); background: #243a24; }
+.player-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 10px;
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 14px;
+}
+.player-btn .emoji { font-size: 34px; display: block; margin-bottom: 8px; }
+.player-btn .name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--gold); }
+.player-btn.full-width { grid-column: span 2; }
+
+.go-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.go-btn:active { background: var(--gold-light); }
+
+/* SECTION TITLE */
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* INFO BOX */
+.info-box {
+  background: rgba(45, 106, 79, 0.3);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+.info-box strong { color: var(--text); }
+
+/* PROGRESS */
+.progress-wrap { margin-bottom: 16px; }
+.progress-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.progress-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.4s ease; }
+
+/* GROUP CARDS */
+.group-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.group-head {
+  background: linear-gradient(90deg, var(--green) 0%, rgba(26,71,42,0.7) 100%);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.group-badge {
+  background: var(--gold);
+  color: var(--dark);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.group-teams { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.group-teams strong { color: var(--text); font-size: 13px; }
+
+.group-body { padding: 12px 14px; }
+.pick-row {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.rank-chip {
+  background: var(--dark);
+  border-radius: 6px;
+  padding: 4px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+.rank-chip.r1 { color: #ffd700; border: 1px solid #ffd700; }
+.rank-chip.r2 { color: #c0c0c0; border: 1px solid #c0c0c0; }
+.rank-chip.r3 { color: #cd7f32; border: 1px solid #cd7f32; }
+.rank-chip.r4 { color: var(--text-muted); border: 1px solid var(--border); }
+
+.pick-sel {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 30px 10px 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%238fad8f' d='M5 7L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.pick-sel:focus { outline: none; border-color: var(--gold); }
+.pick-sel option { background: #152a1a; }
+
+.save-group-btn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.save-group-btn:active { transform: scale(0.98); }
+.save-group-btn.saved {
+  background: rgba(240,165,0,0.1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* SAVE FAB */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 30px;
+  padding: 14px 36px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(240,165,0,0.45);
+  z-index: 50;
+  transition: all 0.15s;
+}
+.fab:active { transform: translateX(-50%) scale(0.97); }
+
+/* PHASE LOCK */
+.lock-card {
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid #3a3a6c;
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.lock-card .lock { font-size: 48px; display: block; margin-bottom: 12px; }
+.lock-card h3 { color: var(--gold); font-size: 24px; margin-bottom: 6px; }
+.lock-card p { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+.lock-date { display: inline-block; background: rgba(240,165,0,0.15); border: 1px solid var(--gold); color: var(--gold); font-weight: 800; font-size: 12px; padding: 4px 14px; border-radius: 20px; margin-top: 10px; }
+
+/* SCOREBOARD */
+.score-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.score-head {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, var(--green) 0%, rgba(26,71,42,0.5) 100%);
+}
+.score-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 2px; }
+.score-pts { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--text); }
+.score-detail { padding: 10px 16px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+.score-groups { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 16px 12px; }
+.group-pill {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.group-pill.done { border-color: var(--gold); color: var(--gold); }
+
+/* SCORING GUIDE */
+.scoring-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.scoring-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.scoring-table tr:last-child td { border-bottom: none; }
+.scoring-table .pts { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--gold); text-align: right; }
+
+.phase-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.phase-badge.open { background: rgba(45,106,79,0.4); border: 1px solid var(--green-light); color: #6dbf87; }
+.phase-badge.locked { background: rgba(60,60,100,0.4); border: 1px solid #3a3a6c; color: #7070a0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚽ WORLD CUP 2026</h1>
+  <div class="sub">BROWN FAMILY POOL · USA / CANADA / MEXICO</div>
+  <div class="player-badge" id="playerBadge" style="display:none"></div>
+</div>
+
+<div class="tabs" id="mainTabs" style="display:none">
+  <div class="tab active" onclick="showScreen('groups',this)">⚽ Groups</div>
+  <div class="tab" onclick="showScreen('bracket',this)">🗂 Bracket</div>
+  <div class="tab" onclick="showScreen('lifeline',this)">⚡ Lifeline</div>
+  <div class="tab" onclick="showScreen('scores',this)">🏆 Scores</div>
+  <div class="tab" onclick="showScreen('rules',this)">📋 Rules</div>
+  <div class="tab" onclick="showScreen('player',this)">👤 Switch</div>
+</div>
+
+<!-- ═══════════════ PLAYER SELECT ═══════════════ -->
+<div class="screen active" id="screen-player">
+  <div class="welcome-hero">
+    <span class="trophy">🏆</span>
+    <h2>WHO ARE YOU?</h2>
+    <p>Select your name to enter or update your picks</p>
+  </div>
+
+  <div class="player-grid">
+    <div class="player-btn" onclick="selectPlayer('Michelle',this)">
+      <span class="emoji">🦅</span>
+      <span class="name">Michelle</span>
+    </div>
+    <div class="player-btn" onclick="selectPlayer('Dad',this)">
+      <span class="emoji">⚽</span>
+      <span class="name">Dad</span>
+    </div>
+    <div class="player-btn" onclick="selectPlayer('Mom',this)">
+      <span class="emoji">🌸</span>
+      <span class="name">Mom</span>
+    </div>
+    <div class="player-btn" onclick="selectPlayer('Matt',this)">
+      <span class="emoji">🔭</span>
+      <span class="name">Matt</span>
+    </div>
+    <div class="player-btn full-width" onclick="selectPlayer('Jacob',this)">
+      <span class="emoji">💪</span>
+      <span class="name">Jacob</span>
+    </div>
+  </div>
+
+  <button class="go-btn" onclick="confirmPlayer()">LET'S GO →</button>
+</div>
+
+<!-- ═══════════════ GROUP STAGE ═══════════════ -->
+<div class="screen" id="screen-groups">
+  <div class="section-title">GROUP STAGE PICKS</div>
+  <span class="phase-badge open">🟢 Open Now — Locks June 11 at Kickoff</span>
+
+  <div class="info-box">
+    Rank all 4 teams in each group (1st–4th). You don't have to fill all positions, but the more you pick the more points you can earn. Save each group individually or hit <strong>Save All</strong> at the bottom.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label" id="progressLabel">0 of 12 groups saved</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="groupsContainer"></div>
+  <button class="fab" onclick="saveAllGroups()">💾 SAVE ALL</button>
+</div>
+
+<!-- ═══════════════ BRACKET ═══════════════ -->
+<div class="screen" id="screen-bracket">
+  <div class="section-title">KNOCKOUT BRACKET</div>
+  <span class="phase-badge locked">🔐 Opens June 27</span>
+
+  <div class="lock-card">
+    <span class="lock">🗂</span>
+    <h3>BRACKET PICKS</h3>
+    <p>After the final group stage game, the full Round of 32 bracket is set. You'll have until <strong style="color:var(--text)">June 27 EOD</strong> to fill out your complete bracket — R32 all the way to the Final.<br><br>
+    Pick your winners and <strong style="color:var(--text)">live or die by your bracket</strong> until the Final Lifeline opens.</p>
+    <span class="lock-date">Opens after group stage · Locks June 27</span>
+  </div>
+
+  <div class="info-box">
+    📋 <strong>Knockout starts June 28.</strong><br>
+    Round of 32 → Round of 16 → Quarterfinals → Semifinals → Final<br><br>
+    Scoring escalates each round. Teams you correctly picked in the group stage earn bonus points if they go deep.
+  </div>
+</div>
+
+<!-- ═══════════════ LIFELINE ═══════════════ -->
+<div class="screen" id="screen-lifeline">
+  <div class="section-title">FINAL LIFELINE</div>
+  <span class="phase-badge locked">🔐 Opens After Semifinals</span>
+
+  <div class="lock-card">
+    <span class="lock">⚡</span>
+    <h3>ONE LAST CHANCE</h3>
+    <p>After the semifinals conclude, you get <strong style="color:var(--text)">one pick change</strong> — who wins the Final?<br><br>
+    Change your mind or stick with your bracket pick. Either way, the Lifeline is your final answer for the champion.</p>
+    <span class="lock-date">Opens after semis · Locks EOD before July 19 Final</span>
+  </div>
+
+  <div class="info-box">
+    ⚡ <strong>Bonus multiplier</strong> if your Lifeline pick wins the Final<br>
+    ⚡⚡ <strong>Double bonus</strong> if that team was also in your original group stage picks AND your bracket pick
+  </div>
+</div>
+
+<!-- ═══════════════ SCORES ═══════════════ -->
+<div class="screen" id="screen-scores">
+  <div class="section-title">SCOREBOARD</div>
+  <div class="info-box" style="margin-bottom:16px">Scores update as results come in. Group stage points calculated after June 24 (last group games).</div>
+  <div id="scoreboardContainer"></div>
+</div>
+
+<!-- ═══════════════ RULES ═══════════════ -->
+<div class="screen" id="screen-rules">
+  <div class="section-title">SCORING RULES</div>
+
+  <div class="group-card" style="margin-bottom:14px">
+    <div class="group-head">
+      <div class="group-badge">1</div>
+      <div><strong style="color:var(--text)">Group Stage</strong><br><span style="font-size:11px;color:var(--text-muted)">Locks June 11</span></div>
+    </div>
+    <div class="group-body">
+      <table class="scoring-table">
+        <tr><td>Correctly pick a group <strong>winner (1st)</strong></td><td class="pts">2 pts</td></tr>
+        <tr><td>Correctly pick a group <strong>runner-up (2nd)</strong></td><td class="pts">1 pt</td></tr>
+        <tr><td>Picked 1st but they finished <strong>2nd</strong> (still advance)</td><td class="pts">1 pt</td></tr>
+        <tr><td>Correctly pick a <strong>wild card 3rd place</strong> team that advances</td><td class="pts">2 pts</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="group-card" style="margin-bottom:14px">
+    <div class="group-head">
+      <div class="group-badge">2</div>
+      <div><strong style="color:var(--text)">Knockout Bracket</strong><br><span style="font-size:11px;color:var(--text-muted)">Locks June 27</span></div>
+    </div>
+    <div class="group-body">
+      <table class="scoring-table">
+        <tr><td>Correct <strong>Round of 32</strong> winner</td><td class="pts">1 pt</td></tr>
+        <tr><td>Correct <strong>Round of 16</strong> winner</td><td class="pts">2 pts</td></tr>
+        <tr><td>Correct <strong>Quarterfinal</strong> winner</td><td class="pts">4 pts</td></tr>
+        <tr><td>Correct <strong>Semifinal</strong> winner</td><td class="pts">8 pts</td></tr>
+        <tr><td>Correct <strong>Champion</strong> (bracket pick)</td><td class="pts">16 pts</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="group-card" style="margin-bottom:14px">
+    <div class="group-head">
+      <div class="group-badge">3</div>
+      <div><strong style="color:var(--text)">Final Lifeline</strong><br><span style="font-size:11px;color:var(--text-muted)">Locks day of Final</span></div>
+    </div>
+    <div class="group-body">
+      <table class="scoring-table">
+        <tr><td>Lifeline pick <strong>wins the Final</strong></td><td class="pts">+10 pts</td></tr>
+        <tr><td>Lifeline + bracket pick + group pick all correct <strong>(triple crown)</strong></td><td class="pts">×2 all</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="info-box">
+    🏆 <strong>Final Dates</strong><br>
+    Group stage: June 11 – June 24<br>
+    Round of 32: June 28<br>
+    Semifinals: ~July 14–15<br>
+    <strong>Final: July 19, 2026</strong>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────
+const PLAYERS = ['Michelle','Dad','Mom','Matt','Jacob'];
+const EMOJIS  = {Michelle:'🦅',Dad:'⚽',Mom:'🌸',Matt:'🔭',Jacob:'💪'};
+
+const GROUPS = {
+  A:{teams:['Mexico','South Africa','South Korea','Czechia']},
+  B:{teams:['Canada','Bosnia & Herz.','Qatar','Switzerland']},
+  C:{teams:['Brazil','Morocco','Haiti','Scotland']},
+  D:{teams:['USA','Paraguay','Australia','Türkiye']},
+  E:{teams:['Germany','Curaçao','Côte d\'Ivoire','Ecuador']},
+  F:{teams:['Netherlands','Japan','Sweden','Tunisia']},
+  G:{teams:['Belgium','Egypt','Iran','New Zealand']},
+  H:{teams:['Spain','Cape Verde','Saudi Arabia','Uruguay']},
+  I:{teams:['France','Senegal','Iraq','Norway']},
+  J:{teams:['Argentina','Algeria','Austria','Jordan']},
+  K:{teams:['Portugal','DR Congo','Uzbekistan','Colombia']},
+  L:{teams:['England','Croatia','Ghana','Panama']}
+};
+
+const RANKS = ['1st','2nd','3rd','4th'];
+const RANK_LABELS = ['🥇 1st Place','🥈 2nd Place','🥉 3rd Place','4th Place'];
+const RANK_CLASSES = ['r1','r2','r3','r4'];
+
+// ─── STATE ──────────────────────────────────────────────────────
+let currentPlayer = null;
+let allPicks = {};
+
+function loadData() {
+  try {
+    const s = localStorage.getItem('wc2026_brown');
+    if (s) allPicks = JSON.parse(s);
+  } catch(e) {}
+  PLAYERS.forEach(p => { if (!allPicks[p]) allPicks[p] = {groups:{}}; });
+}
+
+function saveData() {
+  try { localStorage.setItem('wc2026_brown', JSON.stringify(allPicks)); } catch(e) {}
+}
+
+// ─── PLAYER SELECT ───────────────────────────────────────────────
+function selectPlayer(name, el) {
+  currentPlayer = name;
+  document.querySelectorAll('.player-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function confirmPlayer() {
+  if (!currentPlayer) { showToast('Please select your name first!'); return; }
+  document.getElementById('playerBadge').textContent = EMOJIS[currentPlayer] + ' ' + currentPlayer;
+  document.getElementById('playerBadge').style.display = 'inline-block';
+  document.getElementById('mainTabs').style.display = 'flex';
+  showScreen('groups', document.querySelector('.tab'));
+  renderGroups();
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────
+function showScreen(name, tabEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  if (name === 'scores') renderScoreboard();
+  if (name === 'groups') renderGroups();
+}
+
+// ─── GROUPS ──────────────────────────────────────────────────────
+function renderGroups() {
+  if (!currentPlayer) return;
+  const container = document.getElementById('groupsContainer');
+  container.innerHTML = '';
+  const playerPicks = allPicks[currentPlayer]?.groups || {};
+
+  Object.entries(GROUPS).forEach(([letter, group]) => {
+    const picks = playerPicks[letter] || {};
+    const saved = !!picks._saved;
+
+    const card = document.createElement('div');
+    card.className = 'group-card';
+
+    const teamList = group.teams.join(' · ');
+
+    card.innerHTML = `
+      <div class="group-head">
+        <div class="group-badge">${letter}</div>
+        <div class="group-teams">
+          <strong>Group ${letter}</strong><br>${teamList}
+        </div>
+      </div>
+      <div class="group-body">
+        ${RANKS.map((rank, i) => `
+          <div class="pick-row">
+            <div class="rank-chip ${RANK_CLASSES[i]}">${i+1}</div>
+            <select class="pick-sel" id="sel-${letter}-${rank}" onchange="markUnsaved('${letter}')">
+              <option value="">— ${RANK_LABELS[i]} —</option>
+              ${group.teams.map(t => `<option value="${t}" ${picks[rank] === t ? 'selected' : ''}>${t}</option>`).join('')}
+            </select>
+          </div>
+        `).join('')}
+        <button class="save-group-btn ${saved ? 'saved' : ''}" id="saveBtn-${letter}" onclick="saveGroup('${letter}')">
+          ${saved ? '✅ SAVED — tap to update' : 'SAVE GROUP ' + letter}
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  updateProgress();
+}
+
+function markUnsaved(letter) {
+  const btn = document.getElementById('saveBtn-' + letter);
+  if (btn) { btn.classList.remove('saved'); btn.textContent = 'SAVE GROUP ' + letter; }
+}
+
+function saveGroup(letter) {
+  if (!currentPlayer) return;
+  const picks = { _saved: true };
+  const selected = [];
+  let valid = true;
+
+  RANKS.forEach(rank => {
+    const val = document.getElementById(`sel-${letter}-${rank}`)?.value;
+    if (val) {
+      if (selected.includes(val)) { valid = false; return; }
+      selected.push(val);
+      picks[rank] = val;
+    }
+  });
+
+  if (!valid) { showToast('Each team can only appear once per group!'); return; }
+
+  if (!allPicks[currentPlayer]) allPicks[currentPlayer] = {groups:{}};
+  allPicks[currentPlayer].groups[letter] = picks;
+  saveData();
+
+  const btn = document.getElementById('saveBtn-' + letter);
+  if (btn) { btn.classList.add('saved'); btn.textContent = '✅ SAVED — tap to update'; }
+  updateProgress();
+  showToast('Group ' + letter + ' saved! ✓');
+}
+
+function saveAllGroups() {
+  Object.keys(GROUPS).forEach(letter => saveGroup(letter));
+}
+
+function updateProgress() {
+  if (!currentPlayer) return;
+  const count = Object.values(allPicks[currentPlayer]?.groups || {}).filter(p => p._saved).length;
+  const pct = (count / 12) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = count + ' of 12 groups saved';
+}
+
+// ─── SCOREBOARD ──────────────────────────────────────────────────
+function renderScoreboard() {
+  const container = document.getElementById('scoreboardContainer');
+  container.innerHTML = '';
+
+  // Sort by groups done (actual scoring TBD when results come in)
+  const sorted = [...PLAYERS].sort((a, b) => {
+    const ga = Object.values(allPicks[a]?.groups || {}).filter(p => p._saved).length;
+    const gb = Object.values(allPicks[b]?.groups || {}).filter(p => p._saved).length;
+    return gb - ga;
+  });
+
+  sorted.forEach((player, idx) => {
+    const groups = allPicks[player]?.groups || {};
+    const done = Object.values(groups).filter(p => p._saved).length;
+    const isYou = player === currentPlayer;
+
+    const card = document.createElement('div');
+    card.className = 'score-card';
+    card.style.borderColor = isYou ? 'var(--gold)' : 'var(--border)';
+
+    const medals = ['🥇','🥈','🥉',''];
+    const rank = idx < 3 ? medals[idx] : (idx + 1) + '.';
+
+    card.innerHTML = `
+      <div class="score-head">
+        <div class="score-name">${rank} ${EMOJIS[player]} ${player}${isYou ? ' (you)' : ''}</div>
+        <div class="score-pts">— pts</div>
+      </div>
+      <div class="score-detail">
+        Groups: ${done}/12 submitted &nbsp;·&nbsp; Bracket: pending &nbsp;·&nbsp; Lifeline: pending
+      </div>
+      <div class="score-groups">
+        ${Object.keys(GROUPS).map(l => `<div class="group-pill ${groups[l]?._saved ? 'done' : ''}">${l}</div>`).join('')}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  const note = document.createElement('div');
+  note.className = 'info-box';
+  note.style.marginTop = '12px';
+  note.innerHTML = '📊 Points will be calculated after group stage ends June 24. Scoreboard updates live once results are entered.';
+  container.appendChild(note);
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--green-light);color:var(--text);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:opacity 0.3s;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2200);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>

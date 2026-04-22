@@ -538,16 +538,42 @@ const RANK_CLASSES = ['r1','r2','r3','r4'];
 let currentPlayer = null;
 let allPicks = {};
 
-function loadData() {
-  try {
-    const s = localStorage.getItem('wc2026_brown');
-    if (s) allPicks = JSON.parse(s);
-  } catch(e) {}
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTNrZcgQEymqgG20DSsz9Z4-PB1gIlOJC_opUcpoViPFxXvStZp5s3lmcQAmGPDFjU9w/exec';
+
+async function loadData() {
   PLAYERS.forEach(p => { if (!allPicks[p]) allPicks[p] = {groups:{}}; });
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    const rows = await res.json();
+    rows.forEach(row => {
+      if (!row.player || !row.group) return;
+      if (!allPicks[row.player]) allPicks[row.player] = {groups:{}};
+      allPicks[row.player].groups[row.group] = {
+        _saved: true,
+        '1st': row.rank1 || '',
+        '2nd': row.rank2 || '',
+        '3rd': row.rank3 || '',
+        '4th': row.rank4 || ''
+      };
+    });
+  } catch(e) { console.error('Load failed', e); }
 }
 
-function saveData() {
-  try { localStorage.setItem('wc2026_brown', JSON.stringify(allPicks)); } catch(e) {}
+async function saveData(player, group, picks) {
+  const payload = {
+    player,
+    group,
+    rank1: picks['1st'] || '',
+    rank2: picks['2nd'] || '',
+    rank3: picks['3rd'] || '',
+    rank4: picks['4th'] || ''
+  };
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  } catch(e) { console.error('Save failed', e); }
 }
 
 // ─── PLAYER SELECT ───────────────────────────────────────────────
@@ -644,7 +670,7 @@ function saveGroup(letter) {
 
   if (!allPicks[currentPlayer]) allPicks[currentPlayer] = {groups:{}};
   allPicks[currentPlayer].groups[letter] = picks;
-  saveData();
+  saveData(currentPlayer, letter, picks);
 
   const btn = document.getElementById('saveBtn-' + letter);
   if (btn) { btn.classList.add('saved'); btn.textContent = '✅ SAVED — tap to update'; }
@@ -726,7 +752,7 @@ function showToast(msg) {
 }
 
 // ─── INIT ────────────────────────────────────────────────────────
-loadData();
+loadData().then(() => renderGroups());
 </script>
 </body>
 </html>
